@@ -112,66 +112,7 @@ https://github.com/user-attachments/assets/bf41954b-0794-49dc-a8c0-cf4de64ad952
 <br>
 
 ## 트러블 슈팅
-### Mustache.js를 적용하려다 실패한 사례
-* 문제 상황<br>
-프로젝트에서 동적으로 데이터를 렌더링해야 하는 요구사항이 있었습니다. 서버에서 기본 데이터를 제공한 뒤, 클라이언트에서 추가적으로 템플릿을 렌더링하거나 업데이트하는 방식이 필요했습니다. 이 과정에서 클라이언트 사이드 렌더링 라이브러리인 Mustache.js를 사용해 템플릿을 처리하려 했습니다.
 
-* 시도한 방법<br>
-1. Mustache.js 라이브러리 추가<br>
-cdnjs를 통해 Mustache.js 라이브러리를 HTML 파일에 추가했습니다.
-```
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.2.0/mustache.min.js"></script>
-```
-2. HTML 템플릿 작성<br>
-클라이언트 사이드에서 동적으로 데이터를 렌더링하기 위해 Mustache 템플릿을 작성했습니다.
-```
-<script id="template" type="x-tmpl-mustache">
-    <div>
-        {{title}} - {{description}}
-    </div>
-</script>
-```
-3. JavaScript를 통한 렌더링 시도<br>
-서버에서 제공된 데이터를 받아 Mustache.js로 렌더링하려고 했습니다.
-```
-const template = document.getElementById('template').innerHTML;
-const data = { title: "Sample Title", description: "This is a sample description." };
-const rendered = Mustache.render(template, data);
-document.getElementById('output').innerHTML = rendered;
-```
-4. Mustache.js의 렌더링 결과 확인<br>
-렌더링 결과를 HTML의 특정 영역에 삽입하고자 했습니다.
-```
-<div id="output"></div>
-```
-* 실패 원인<br>
-Mustache.js는 클라이언트 사이드 렌더링에 초점이 맞춰진 라이브러리로, 서버에서 이미 렌더링된 데이터를 클라이언트에서 다시 수정하거나 업데이트하는 데에는 추가적인 작업이 필요했습니다. 이 프로젝트는 Spring Boot 기반의 SSR(Server-Side Rendering) 프로젝트였고, 서버에서 이미 Mustache 템플릿 엔진을 사용하여 HTML을 렌더링하고 있었습니다.
-
-1. SSR과 CSR 간의 충돌<br>
-서버에서 Mustache를 사용해 HTML을 렌더링한 뒤, 클라이언트에서 Mustache.js로 같은 데이터를 다시 렌더링하려다 보니 중복된 렌더링 과정이 발생했습니다.
-
-2. 데이터 동기화 문제<br>
-클라이언트 사이드에서 렌더링하려면 서버에서 JSON 데이터를 제공해야 했지만, 기존 서버 구조는 JSON 데이터를 반환하도록 설계되지 않았습니다. 이로 인해 클라이언트와 서버 간의 데이터 동기화가 어려웠습니다.
-
-3. 불필요한 복잡성<br>
-클라이언트와 서버 모두 Mustache를 사용하는 방식은 유지보수성과 개발 효율성에서 좋지 않은 선택으로 판단되었습니다.
-
-### 최종 해결 방법
-* 서버 사이드에서 HTML을 완전히 렌더링한 뒤 클라이언트로 전송하는 방식을 유지하기로 결정했습니다.
-* 클라이언트에서 필요한 동적인 데이터 처리는 JavaScript DOM 조작으로 해결했습니다.
-* 추가로 동적인 렌더링이 필요한 경우, Spring Boot의 Mustache 엔진을 활용해 JSON 데이터를 렌더링하거나, Ajax 요청과 함께 서버에서 새로운 HTML 블록을 반환받아 클라이언트에 삽입하는 방식을 채택했습니다.
-
-### 교훈
-1. SSR 프로젝트에서는 CSR 렌더링 라이브러리의 필요성을 신중히 검토<br>
-서버에서 이미 템플릿 엔진을 사용 중이라면 클라이언트 사이드 렌더링 라이브러리를 추가하는 것은 프로젝트 구조를 복잡하게 만들 수 있습니다.
-
-2. 프로젝트의 렌더링 방식 일관성 유지<br>
-서버와 클라이언트 간의 렌더링 책임을 명확히 구분하여, 불필요한 중복 작업을 방지해야 합니다.
-
-3. 필요에 맞는 도구를 선택<br>
-Mustache.js는 SPA(Single Page Application)나 클라이언트 중심의 CSR 프로젝트에서 적합하며, SSR 중심의 Spring Boot 프로젝트에서는 서버 사이드 Mustache 템플릿 엔진을 활용하는 것이 더 적합하다는 결론에 도달했습니다.
-
-<br>
 
 ## 느낀점
 ### 이학석
