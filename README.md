@@ -125,6 +125,23 @@ https://github.com/user-attachments/assets/bf41954b-0794-49dc-a8c0-cf4de64ad952
 
 ## 트러블 슈팅
 
+### 로그인 시도 시 예외 처리 문제
+#### 1. 문제 발생
+- 예외를 던져서 exceptionHandler로 처리를 하고 싶으나 Spring Security가 먼저 예외를 처리해버려서 따로 예외 처리를 못한다.
+
+#### 2. 해결
+- 스프링 시큐리티에서 로그인 실패시 url쿼리 파라미터로 error를 입력한다.
+- 예시 : `http://localhost:8080/login-form?error`
+- 스크립트에 쿼리 파라미터에 error가 존재하면 로그인 실패 alert을 띄워서 처리했다.
+```JavaScript
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        alert("아이디나 비밀번호가 일치하지 않습니다.")
+    }
+</script>
+```
+
 ### 새로운 Dropzone 생성 시 인식 불가
 #### 1. 문제 발생
 
