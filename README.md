@@ -13,6 +13,7 @@
 - [사이트맵](#사이트맵)
 - [ERD](#ERD)
 - [보완할 점](#보완할-점)
+- [프로젝트 진행](#프로젝트-진행)
 - [트러블 슈팅](#트러블-슈팅)
 - [느낀점](#느낀점)
 
@@ -49,7 +50,7 @@ https://github.com/user-attachments/assets/bf41954b-0794-49dc-a8c0-cf4de64ad952
 
 <br>
 
-## 주요기능
+## 구현 기능
 ### 유저 관련 기능
 - 로그인, 로그아웃
 - 로그인 시 상단 메뉴 변경
@@ -93,12 +94,22 @@ https://github.com/user-attachments/assets/bf41954b-0794-49dc-a8c0-cf4de64ad952
 <br>
 
 ## 사이트맵
-![image](https://github.com/user-attachments/assets/e6ee8a32-7a59-4877-96fb-6aad5b065888)
+![사이트맵](https://github.com/user-attachments/assets/e6ee8a32-7a59-4877-96fb-6aad5b065888)
 
 <br>
 
 ## ERD
-![image](https://github.com/user-attachments/assets/1012962c-7555-4db1-b365-3203d151c3dc)
+![ERD](https://github.com/user-attachments/assets/4d2e82e9-ba59-4949-902e-a9d1f3b038b4)
+
+<br>
+
+## 프로젝트 진행
+
+### 일정 관리
+![일정 관리](https://github.com/user-attachments/assets/4bf1e7fc-6d6a-44f7-93ea-7e6ecbb8334a)
+
+### 팀 노션 관리
+![팀 노션 문서 관리](https://github.com/user-attachments/assets/806f2e39-e107-4d31-a123-ff465c173ddf)
 
 <br>
 
@@ -108,21 +119,48 @@ https://github.com/user-attachments/assets/bf41954b-0794-49dc-a8c0-cf4de64ad952
 - 게임 이어하기
 - 신고하기
 - 관리자 페이지
+- 배포
 
 <br>
 
 ## 트러블 슈팅
 
+### 새로운 Dropzone 생성 시 인식 불가
+#### 1. 문제 발생
+
+![image](https://github.com/user-attachments/assets/6303f601-f46d-438c-b2c9-747b384cb520)
+- dropzone을 하나 추가했으나 인식이 안되고 그냥 흰 박스만 생겼다.
+- Dropzone.discover() 메서드를 사용하여 시도해봤으나 해결되지 않았다.
+
+#### 2. 대안으로 해결
+1. input 태그로 처리
+
+![image](https://github.com/user-attachments/assets/bdb2fb08-c471-4e98-8920-f19b0d800ff6)
+- \<input type=”file”\> 태그를 사용하는 방식으로 해결하는 방법을 생각했다.
+- 이미지를 추가하는 것과 다른 방법을 통한 입력이라 마음이 들지 않는다.
+2. 이미지 업로드와 수정을 나눔
+  
+![image](https://github.com/user-attachments/assets/75f49d62-e79b-47d8-8e58-599e3f3cf968)
+- dropzone을 추가하지 않고 처음부터 로딩했을 때 사용하면 잘 작동되어 이미지 수정을 나눠서 페이지를 만든다.
+- 이 방법은 다른 사이트들과 같은 방법으로 차별성을 주지 못해 마음에 들지 않는다.
+
+#### 3. 해결
+- 다시 한번 문서를 꼼꼼히 읽어 본 결과 Dropzone 클래스를 인스턴스화하여 명령형으로 Dropzone을 생성해야 했다.
+- dropzone을 생성할 때 마다 클래스를 만들어줘야 인식이 가능하였다.
+- 클래스의 이름을 다르게하여 각각의 dropzone마다 url을 다르게 줄 수 있다.
+```JavaScript
+let dropzone2 = new Dropzone(".my-dropzone-" + dropIndex, {
+        url: "http://localhost:8080/test/" + dropIndex,
+        method: "put",
+    }
+);
+dropIndex++;
+```
+- 라이브러리의 작동원리를 정확하게 파악하지 못해서 발생한 문제로 문서를 꼼꼼히 읽어봐야 한다는 것을 느꼈다.
 
 ## 느낀점
-### 이학석
-- 이번 프로젝트는 큰 그림을 그리고 체계적으로 설계하며 시작했지만, 일부 완성하지 못한 부분이 있어 아쉬움이 남는다.
-- 비록 현재는 부족한 부분이 있지만, 혼자서라도 계획했던 모든 것을 구현하여 프로젝트를 완성할 것이다.
-### 이강호
-- response.body에서 데이터를 가져와야 하는데 response에서 가져 오는 바람에 2~3시간 날리는 등 어처구니 없는 실수에 시간을 많이 뺐긴 점이 아쉽습니다.
-- 시큐리티 같은 프레임워크를 쓰려면 안의 로직이 어떻게 되는지 알아야 커스텀이 가능했기에 공부가 많이 되었습니다.
-### 임영록
-- 이전 프로젝트에서는 팀원들과 진행하며 불편한 부분에만 규칙을 정하는 방식이었다. 그러나 이번에는 메소드명, 변수명, 브랜치명 등 체계적인 컨벤션과 규칙을 정해 프로젝트를 진행했다. 초반에는 다소 불편했지만, 이를 통해 협업 능력을 키우는 유익한 경험을 얻을 수 있었다.
-### 구예은
-- 담당한 부분에 기능을 추가 구현하지 못해 아쉬웠지만, 기본 구현 이해도를 높일 수 있었다.
+- 팀장으로서 처음 프로젝트를 전체적으로 설정하고 구조를 설계하는 일이 부담스러웠지만, 책임감을 가지고 팀원들이 쉽게 이해할 수 있도록 노력했다. 덕분에 팀원들이 구조를 잘 따라와 주었고, 이를 통해 뿌듯함을 느꼈다.
 
+- 팀 컨벤션을 만들어 작업하면서 리베이스하거나 팀원들의 코드를 리뷰할 때 이전 프로젝트보다 훨씬 이해하기 쉬웠다. 변수명이나 클래스명을 정하는 데에도 큰 도움이 되었다.
+
+- 외부 라이브러리를 사용할 때 문서를 꼼꼼히 읽고 프로젝트에 적용하는 방법을 이번 기회를 통해 제대로 배울 수 있었다.
